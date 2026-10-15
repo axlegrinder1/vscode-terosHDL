@@ -911,6 +911,13 @@
                 "mac": "command+delete",
                 "when": "editorTextFocus"
             }
+        ],
+        "semanticTokenTypes": [
+            {
+                "id": "signal",
+                "superType": "variable",
+                "description": "VHDL signal or port"
+            }
         ]
     },
     "scripts": {

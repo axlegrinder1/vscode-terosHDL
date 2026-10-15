@@ -109,6 +109,13 @@
                 "mac": "command+delete",
                 "when": "editorTextFocus"
             }
+        ],
+        "semanticTokenTypes": [
+            {
+                "id": "signal",
+                "superType": "variable",
+                "description": "VHDL signal or port"
+            }
         ]
     },
 {% filter indent(width=4) %}

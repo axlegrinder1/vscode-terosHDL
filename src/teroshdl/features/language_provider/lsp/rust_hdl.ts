@@ -20,9 +20,29 @@ import {
     LanguageClientOptions,
     ServerOptions,
     RevealOutputChannelOn,
-    State
+    State,
+    StaticFeature
 } from 'vscode-languageclient/node';
 import { e_linter_general_linter_vhdl } from 'colibri/config/config_declaration';
+
+/**
+ * vscode-languageclient only announces the standard LSP token types, so the
+ * server would never send the non-standard ones TerosHDL contributes in
+ * package.json. Add them to the handshake.
+ */
+function announceTokenTypes(tokenTypes: string[]): StaticFeature {
+    return {
+        fillClientCapabilities(capabilities) {
+            const semanticTokens = capabilities.textDocument?.semanticTokens;
+            if (semanticTokens) {
+                semanticTokens.tokenTypes.push(...tokenTypes);
+            }
+        },
+        initialize() { },
+        getState() { return { kind: 'static' }; },
+        clear() { }
+    };
+}
 
 const isWindows = process.platform === 'win32';
 const languageServerName = isWindows ? 'vhdl_ls-x86_64-pc-windows-msvc' : 'vhdl_ls-x86_64-unknown-linux-musl';
@@ -84,6 +104,7 @@ export class Rusthdl_lsp {
 
         // Create the language client
         this.client = new LanguageClient('vhdlls', 'VHDL LS', serverOptions, clientOptions);
+        this.client.registerFeature(announceTokenTypes(['signal']));
 
         let server_path = this.context.asAbsolutePath(languageServer);
         let is_alive = await this.check_rust_hdl(server_path);
