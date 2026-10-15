@@ -114,6 +114,7 @@
 {% filter indent(width=4) %}
 {% include 'script.nj' %},
 {% include 'dependencie.nj' %},
-{% include 'devDependencie.nj' %}
+{% include 'devDependencie.nj' %},
+{% include 'overrides.nj' %}
 {% endfilter %}
 }

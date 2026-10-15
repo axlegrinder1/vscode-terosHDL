@@ -90,7 +90,8 @@ export class QuartusProjectManager extends Project_manager {
         // Status watcher
         this.quartusStatusWatcher = chokidar.watch(get_directory(this.projectDiskPath), {
             usePolling: true, interval: 500, persistent: true, depth: 7,
-            ignored: ['*.txt', '*.rdb', '*.model', '*.db_info', '*.qmsgdb', '*.rpt', '*.kvp', '*.ddm'],
+            ignored: (path: string, stats?: fs.Stats) =>
+                stats?.isFile() === true && /\.(txt|rdb|model|db_info|qmsgdb|rpt|kvp|ddm)$/.test(path),
         });
         this.quartusStatusWatcher.on('change', (path, _stats) => {
             if (path === this.quartusDatabaseStatusPath) {
